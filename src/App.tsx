@@ -8,7 +8,6 @@ import {
   Col,
   Typography,
   Space,
-  Divider,
   Tag,
   Checkbox,
   List,
@@ -17,13 +16,11 @@ import {
   Input,
   InputNumber,
   Select,
-  Radio,
   Empty,
   Badge,
   Tooltip,
   Popconfirm,
   Statistic,
-  Collapse,
   Segmented,
   Progress,
   message
@@ -42,7 +39,6 @@ import {
   DownOutlined,
   UpOutlined,
   SearchOutlined,
-  ClearOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Recipe, ShoppingItem, TagType, GroupByType } from './types';
@@ -51,7 +47,6 @@ import { AVAILABLE_TAGS, TAG_ICON_MAP } from './constants/tags';
 const { Header, Content, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
-const { Panel } = Collapse;
 const { Option } = Select;
 
 const App: React.FC = () => {
