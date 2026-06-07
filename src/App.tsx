@@ -14,7 +14,6 @@ import {
   Input,
   Empty,
   Badge,
-  Popconfirm,
   Statistic,
   Segmented,
   Progress,
@@ -22,8 +21,6 @@ import {
 } from "antd";
 import {
   PlusOutlined,
-  DeleteOutlined,
-  EditOutlined,
   ShoppingCartOutlined,
   UnorderedListOutlined,
   TagsOutlined,
@@ -41,8 +38,9 @@ import { AVAILABLE_TAGS } from "./constants/tags";
 import ShoppingListItem from "./components/ShoppingListItem";
 import RecipeModal from "./components/RecipeModal";
 import RecipeItemModal from "./components/RecipeItemModal";
+import RecipeSider from "./components/RecipeSider";
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const App: React.FC = () => {
@@ -513,100 +511,15 @@ const App: React.FC = () => {
       </Header>
 
       <Layout>
-        <Sider
-          width={280}
-          style={{
-            background: "#fff",
-            padding: "20px 0",
-            borderRight: "1px solid #f0f0f0",
-          }}
-        >
-          <div style={{ padding: "0 16px", marginBottom: "16px" }}>
-            <Title level={5}>Мои рецепты ({recipes.length})</Title>
-          </div>
-          <List
-            dataSource={recipes}
-            renderItem={(recipe) => (
-              <List.Item
-                style={{
-                  padding: "12px 16px",
-                  cursor: "pointer",
-                  background:
-                    selectedRecipe?.id === recipe.id
-                      ? "#e6f7ff"
-                      : "transparent",
-                  borderLeft:
-                    selectedRecipe?.id === recipe.id
-                      ? "3px solid #1890ff"
-                      : "3px solid transparent",
-                }}
-                onClick={() => setSelectedRecipe(recipe)}
-                actions={[
-                  <Button
-                    type="text"
-                    size="small"
-                    icon={<EditOutlined />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditingRecipe(recipe);
-                      form.setFieldsValue(recipe);
-                      setIsModalVisible(true);
-                    }}
-                  />,
-                  <Popconfirm
-                    title="Удалить рецепт?"
-                    onConfirm={(e) => {
-                      e?.stopPropagation();
-                      handleDeleteRecipe(recipe.id);
-                    }}
-                    okText="Да"
-                    cancelText="Нет"
-                  >
-                    <Button
-                      type="text"
-                      size="small"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </Popconfirm>,
-                ]}
-              >
-                <List.Item.Meta
-                  avatar={
-                    <Badge
-                      count={
-                        recipe.shoppingList.filter((i) => !i.completed).length
-                      }
-                      style={{ backgroundColor: "#52c41a" }}
-                    >
-                      <BookOutlined style={{ fontSize: "20px" }} />
-                    </Badge>
-                  }
-                  title={
-                    <Text strong={selectedRecipe?.id === recipe.id}>
-                      {recipe.title}
-                    </Text>
-                  }
-                  description={
-                    <Space direction="vertical" size={0}>
-                      {recipe.cookingTime && (
-                        <Text type="secondary" style={{ fontSize: "12px" }}>
-                          <ClockCircleOutlined /> {recipe.cookingTime} мин
-                        </Text>
-                      )}
-                      {recipe.servings && (
-                        <Text type="secondary" style={{ fontSize: "12px" }}>
-                          <TeamOutlined /> {recipe.servings} порций
-                        </Text>
-                      )}
-                    </Space>
-                  }
-                />
-              </List.Item>
-            )}
-          />
-        </Sider>
+        <RecipeSider
+          recipes={recipes}
+          selectedRecipe={selectedRecipe}
+          setSelectedRecipe={setSelectedRecipe}
+          setIsModalVisible={setIsModalVisible}
+          setEditingRecipe={setEditingRecipe}
+          form={form}
+          handleDeleteRecipe={handleDeleteRecipe}
+        />
 
         <Content style={{ padding: "24px", background: "#f5f5f5" }}>
           {selectedRecipe ? (
