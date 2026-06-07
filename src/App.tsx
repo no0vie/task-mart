@@ -9,16 +9,11 @@ import {
   Typography,
   Space,
   Tag,
-  Checkbox,
   List,
-  Modal,
   Form,
   Input,
-  InputNumber,
-  Select,
   Empty,
   Badge,
-  Tooltip,
   Popconfirm,
   Statistic,
   Segmented,
@@ -41,16 +36,14 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Recipe, ShoppingItem, TagType, GroupByType } from "./types";
-import { AVAILABLE_TAGS, TAG_ICON_MAP } from "./constants/tags";
+import { Recipe, ShoppingItem, GroupByType } from "./types";
+import { AVAILABLE_TAGS } from "./constants/tags";
 import ShoppingListItem from "./components/ShoppingListItem";
 import RecipeModal from "./components/RecipeModal";
 import RecipeItemModal from "./components/RecipeItemModal";
 
 const { Header, Content, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
-const { TextArea } = Input;
-const { Option } = Select;
 
 const App: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -448,14 +441,6 @@ const App: React.FC = () => {
       default:
         return { [selectedRecipe.title]: items };
     }
-  };
-
-  // Получение иконки тега
-  const getTagIcon = (tagId: TagType) => {
-    const tag = AVAILABLE_TAGS.find((t) => t.id === tagId);
-    if (!tag) return null;
-    const IconComponent = TAG_ICON_MAP[tag.icon];
-    return <IconComponent />;
   };
 
   // Статистика

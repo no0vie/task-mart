@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, Form, Input, InputNumber, Button, Space, Typography } from "antd";
+import { Modal, Form, Input, InputNumber, Button, Space } from "antd";
 import type { Recipe } from "../types";
 
 interface RecipeModalProps {
