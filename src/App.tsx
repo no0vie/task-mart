@@ -44,6 +44,7 @@ import type { MenuProps } from "antd";
 import { Recipe, ShoppingItem, TagType, GroupByType } from "./types";
 import { AVAILABLE_TAGS, TAG_ICON_MAP } from "./constants/tags";
 import ShoppingListItem from "./components/ShoppingListItem";
+import RecipeItemModal from "./components/RecipeItemModal.tsx";
 
 const { Header, Content, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -62,6 +63,11 @@ const App: React.FC = () => {
   const [collapsedSections, setCollapsedSections] = useState<string[]>([]);
   const [form] = Form.useForm();
   const [itemForm] = Form.useForm();
+  const handleItemModalClose = () => {
+    setIsItemModalVisible(false);
+    setEditingItem(null);
+    // itemForm reset handled inside modal
+  };
 
   // Загрузка данных из localStorage
   useEffect(() => {
@@ -375,13 +381,11 @@ const App: React.FC = () => {
     setSelectedRecipe(updatedRecipe);
     setIsItemModalVisible(false);
     setEditingItem(null);
-    itemForm.resetFields();
     message.success(editingItem ? "Пункт обновлен!" : "Пункт добавлен!");
   };
 
   const handleEditItem = (item: ShoppingItem) => {
     setEditingItem(item);
-    itemForm.setFieldsValue(item);
     setIsItemModalVisible(true);
   };
 
@@ -875,61 +879,12 @@ const App: React.FC = () => {
       </Modal>
 
       {/* Модальное окно для пункта списка */}
-      <Modal
-        title={editingItem ? "Редактировать покупку" : "Добавить покупку"}
-        open={isItemModalVisible}
-        onCancel={() => {
-          setIsItemModalVisible(false);
-          setEditingItem(null);
-          itemForm.resetFields();
-        }}
-        footer={null}
-      >
-        <Form form={itemForm} layout="vertical" onFinish={handleSaveItem}>
-          <Form.Item
-            name="name"
-            label="Название"
-            rules={[{ required: true, message: "Введите название" }]}
-          >
-            <Input placeholder="Например: Картофель" />
-          </Form.Item>
-          <Form.Item
-            name="amount"
-            label="Количество"
-            rules={[{ required: true, message: "Укажите количество" }]}
-          >
-            <Input placeholder="Например: 2 шт или 500 г" />
-          </Form.Item>
-          <Form.Item name="tags" label="Теги">
-            <Select mode="multiple" placeholder="Выберите теги" allowClear>
-              {AVAILABLE_TAGS.map((tag) => (
-                <Option key={tag.id} value={tag.id}>
-                  <Space>
-                    {getTagIcon(tag.id)}
-                    <Tag color={tag.color}>{tag.name}</Tag>
-                  </Space>
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                {editingItem ? "Сохранить" : "Добавить"}
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsItemModalVisible(false);
-                  setEditingItem(null);
-                  itemForm.resetFields();
-                }}
-              >
-                Отмена
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <RecipeItemModal
+        visible={isItemModalVisible}
+        onClose={handleItemModalClose}
+        onSubmit={handleSaveItem}
+        editingItem={editingItem}
+      />
     </Layout>
   );
 };
