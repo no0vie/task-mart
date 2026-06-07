@@ -44,7 +44,8 @@ import type { MenuProps } from "antd";
 import { Recipe, ShoppingItem, TagType, GroupByType } from "./types";
 import { AVAILABLE_TAGS, TAG_ICON_MAP } from "./constants/tags";
 import ShoppingListItem from "./components/ShoppingListItem";
-import RecipeItemModal from "./components/RecipeItemModal.tsx";
+import RecipeModal from "./components/RecipeModal";
+import RecipeItemModal from "./components/RecipeItemModal";
 
 const { Header, Content, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -822,61 +823,17 @@ const App: React.FC = () => {
       </Layout>
 
       {/* Модальное окно для рецепта */}
-      <Modal
-        title={editingRecipe ? "Редактировать рецепт" : "Новый рецепт"}
-        open={isModalVisible}
-        onCancel={() => {
+      <RecipeModal
+        visible={isModalVisible}
+        onClose={() => {
           setIsModalVisible(false);
           setEditingRecipe(null);
           form.resetFields();
         }}
-        footer={null}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={editingRecipe ? handleUpdateRecipe : handleCreateRecipe}
-        >
-          <Form.Item
-            name="title"
-            label="Название рецепта"
-            rules={[{ required: true, message: "Введите название" }]}
-          >
-            <Input placeholder="Например: Борщ украинский" />
-          </Form.Item>
-          <Form.Item name="description" label="Описание">
-            <TextArea rows={3} placeholder="Краткое описание рецепта" />
-          </Form.Item>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="cookingTime" label="Время приготовления (мин)">
-                <InputNumber min={1} style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="servings" label="Количество порций">
-                <InputNumber min={1} style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                {editingRecipe ? "Сохранить" : "Создать"}
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsModalVisible(false);
-                  setEditingRecipe(null);
-                  form.resetFields();
-                }}
-              >
-                Отмена
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
+        onSubmit={editingRecipe ? handleUpdateRecipe : handleCreateRecipe}
+        editingRecipe={editingRecipe}
+        form={form}
+      />
 
       {/* Модальное окно для пункта списка */}
       <RecipeItemModal
