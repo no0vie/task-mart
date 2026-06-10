@@ -12,7 +12,7 @@ import RecipeItemModal from "./components/RecipeItemModal";
 import RecipeShoppingList from "./components/RecipeShoppingList";
 import RecipeSider from "./components/RecipeSider";
 
-const { Header } = Layout;
+const { Content, Header } = Layout;
 
 const AppInner: React.FC = () => {
   const { recipes, selectedRecipe } = recipeState;
@@ -195,26 +195,28 @@ const AppInner: React.FC = () => {
           handleDeleteRecipe={handleDeleteRecipe}
         />
 
-        {selectedMenuKey === "2" ? (
-          <RecipeShoppingList />
-        ) : (
-          <RecipeCard
-            selectedRecipe={selectedRecipe}
-            currentStats={currentStats}
-            groupBy={groupBy}
-            setGroupBy={setGroupBy}
-            searchText={searchText}
-            setSearchText={setSearchText}
-            collapsedSections={collapsedSections}
-            setCollapsedSections={setCollapsedSections}
-            itemForm={itemForm}
-            setIsItemModalVisible={setIsItemModalVisible}
-            setEditingItem={setEditingItem}
-            handleEditItem={handleEditItem}
-            handleDeleteItem={handleDeleteItem}
-            handleToggleItem={handleToggleItem}
-          />
-        )}
+        <Content style={{ padding: "24px", background: "#f5f5f5" }}>
+          {selectedMenuKey === "2" ? (
+            <RecipeShoppingList />
+          ) : (
+            <RecipeCard
+              selectedRecipe={selectedRecipe}
+              currentStats={currentStats}
+              groupBy={groupBy}
+              setGroupBy={setGroupBy}
+              searchText={searchText}
+              setSearchText={setSearchText}
+              collapsedSections={collapsedSections}
+              setCollapsedSections={setCollapsedSections}
+              itemForm={itemForm}
+              setIsItemModalVisible={setIsItemModalVisible}
+              setEditingItem={setEditingItem}
+              handleEditItem={handleEditItem}
+              handleDeleteItem={handleDeleteItem}
+              handleToggleItem={handleToggleItem}
+            />
+          )}
+        </Content>
       </Layout>
 
       {/* Модальное окно для рецепта */}
