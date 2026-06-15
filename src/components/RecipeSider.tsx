@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import type { FormInstance } from "antd";
 import type { Recipe } from "../types";
+import { shoppingItemState } from "../states/ShoppingItemState";
 
 interface RecipeSiderProps {
   recipes: Recipe[];
@@ -111,7 +112,11 @@ const RecipeSider: React.FC<RecipeSiderProps> = ({
             <List.Item.Meta
               avatar={
                 <Badge
-                  count={recipe.shoppingList.filter((i) => !i.completed).length}
+                  count={recipe.shoppingList.reduce(
+                    (acc, id) =>
+                      acc + (shoppingItemState.byId.get(id)?.completed ? 1 : 0),
+                    0,
+                  )}
                   style={{ backgroundColor: "#52c41a" }}
                 >
                   <BookOutlined style={{ fontSize: "20px" }} />

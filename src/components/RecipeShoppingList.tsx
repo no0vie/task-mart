@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import type { GroupByType, Recipe, ShoppingItem } from "../types";
 import { recipeState } from "../states/RecipeState";
+import { shoppingItemState } from "../states/ShoppingItemState";
 import ShoppingListHeader from "./ShoppingListHeader";
 import ShoppingList from "./ShoppingList";
 import RecipeItemModal from "./RecipeItemModal";
@@ -21,41 +22,34 @@ const RecipeShoppingList: React.FC = observer(() => {
   };
 
   // Prepare aggregated data when in 'none' group
-  const mergedItems: (ShoppingItem & { originalRecipeId?: string })[] =
-    recipes.flatMap((r) =>
-      r.shoppingList.map((item) => ({ ...item, originalRecipeId: r.id })),
-    );
+  const mergedItems: ShoppingItem[] = recipes
+    .flatMap((r) => r.shoppingList.map((id) => shoppingItemState.byId.get(id)))
+    .filter((i): i is ShoppingItem => !!i);
   const virtualRecipe: Recipe = {
     id: "all",
     title: "Общий список",
     description: "",
     cookingTime: 0,
     servings: 0,
-    shoppingList: mergedItems as ShoppingItem[],
+    shoppingList: mergedItems.map((i) => i.id),
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  const itemToRecipeMap = new Map<string, string>();
-  mergedItems.forEach((item) => {
-    if (item.originalRecipeId) {
-      itemToRecipeMap.set(item.id, item.originalRecipeId);
-    }
-  });
-
-  const openEdit = (recipeId?: string) => (item: ShoppingItem) => {
-    setEditingRecipeId(recipeId || (item as any).originalRecipeId!);
+  const openEdit = (item: ShoppingItem) => {
+    const rid = shoppingItemState.getRecipeForItem(item.id);
+    setEditingRecipeId(rid ?? null);
     setEditingItem(item);
     setIsItemModalVisible(true);
   };
 
   const handleDeleteAggregated = (id: string) => {
-    const rid = itemToRecipeMap.get(id);
+    const rid = shoppingItemState.getRecipeForItem(id);
     if (rid) recipeState.deleteShoppingItem(rid, id);
   };
 
   const handleToggleAggregated = (id: string) => {
-    const rid = itemToRecipeMap.get(id);
+    const rid = shoppingItemState.getRecipeForItem(id);
     if (rid) recipeState.toggleShoppingItem(rid, id);
   };
 
@@ -77,7 +71,7 @@ const RecipeShoppingList: React.FC = observer(() => {
             selectedRecipe={r}
             groupBy={groupBy}
             searchText={searchText}
-            onEdit={openEdit(r.id)}
+            onEdit={openEdit}
             onDelete={(id: string) => recipeState.deleteShoppingItem(r.id, id)}
             onToggle={(id: string) => recipeState.toggleShoppingItem(r.id, id)}
           />
@@ -87,7 +81,7 @@ const RecipeShoppingList: React.FC = observer(() => {
           selectedRecipe={virtualRecipe}
           groupBy={groupBy}
           searchText={searchText}
-          onEdit={openEdit()}
+          onEdit={openEdit}
           onDelete={(id: string) => handleDeleteAggregated(id)}
           onToggle={(id: string) => handleToggleAggregated(id)}
         />

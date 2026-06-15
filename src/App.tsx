@@ -5,6 +5,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Recipe, ShoppingItem, GroupByType } from "./types";
 import { recipeState } from "./states/RecipeState";
+import { shoppingItemState } from "./states/ShoppingItemState";
 import { MENU_ITEMS } from "./constants/ui";
 import RecipeCard from "./components/RecipeCard";
 import RecipeModal from "./components/RecipeModal";
@@ -128,9 +129,10 @@ const AppInner: React.FC = () => {
   // Статистика
   const getRecipeStats = (recipe: Recipe) => {
     const total = recipe.shoppingList.length;
-    const completed = recipe.shoppingList.filter(
-      (item) => item.completed,
-    ).length;
+    const completed = recipe.shoppingList.reduce(
+      (acc, id) => acc + (shoppingItemState.byId.get(id)?.completed ? 1 : 0),
+      0,
+    );
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
     return { total, completed, percentage };
   };

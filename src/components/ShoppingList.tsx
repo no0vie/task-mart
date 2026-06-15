@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Divider } from "antd";
 import type { Recipe, GroupByType, GroupedItems, ShoppingItem } from "../types";
+import { shoppingItemState } from "../states/ShoppingItemState";
 import ShoppingListItem from "./ShoppingListItem";
 import { AVAILABLE_TAGS } from "../constants/ui";
 
@@ -20,16 +21,28 @@ const getGroupedItems = (
 ): GroupedItems => {
   if (!selectedRecipe) return {};
 
-  let items = selectedRecipe.shoppingList.filter((i) =>
+  const isVirtual = selectedRecipe.id === "all";
+
+  let items: ShoppingItem[] = [];
+  if (isVirtual) {
+    // virtual recipe already contains full objects
+    items = selectedRecipe.shoppingList as unknown as ShoppingItem[];
+  } else {
+    items = shoppingItemState.getByRecipe(selectedRecipe.id);
+  }
+
+  const filtered = items.filter((i) =>
     i.name.toLowerCase().includes(searchText.toLowerCase()),
   );
 
+  const groupItems = filtered;
+
   switch (groupBy) {
     case "recipe":
-      return { [selectedRecipe.title]: items };
+      return { [selectedRecipe.title]: groupItems };
     case "tag": {
       const grouped: GroupedItems = {};
-      items.forEach((item) => {
+      groupItems.forEach((item) => {
         if (item.tags.length === 0) {
           if (!grouped["Без тега"]) grouped["Без тега"] = [];
           grouped["Без тега"].push(item);
@@ -44,12 +57,11 @@ const getGroupedItems = (
       });
       return grouped;
     }
-    case "none": {
-      // All items in one group; component will handle separator
-      return { [selectedRecipe.title]: items };
-    }
+    case "none":
+      // All items in one group
+      return { [selectedRecipe.title]: groupItems };
     default:
-      return { [selectedRecipe.title]: items };
+      return { [selectedRecipe.title]: groupItems };
   }
 };
 
@@ -115,7 +127,7 @@ const ShoppingList: React.FC<ShoppingListProps> = ({
               <ShoppingListItem
                 key={item.id}
                 item={item}
-                showTag={groupBy !== 'tag'}
+                showTag={groupBy !== "tag"}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onToggle={onToggle}

@@ -1,5 +1,9 @@
 import { DemoRecipeData } from "../types";
 
+import type { ShoppingItem } from "../types";
+
+export const DEMO_SHOPPING_ITEMS: ShoppingItem[] = [];
+
 export const DEMO_RECIPES_DATA: DemoRecipeData[] = [
   {
     id: "1",
@@ -169,3 +173,10 @@ export const DEMO_RECIPES_DATA: DemoRecipeData[] = [
     ],
   },
 ];
+
+// Build shopping items array from demo recipes
+DEMO_RECIPES_DATA.forEach((recipe) => {
+  recipe.shoppingList.forEach((item) => {
+    DEMO_SHOPPING_ITEMS.push({ ...item });
+  });
+});

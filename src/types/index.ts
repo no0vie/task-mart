@@ -1,4 +1,12 @@
-export type TagType = 'bakaleya' | 'conservy' | 'ovoshi' | 'myaso' | 'molochnoe' | 'frukty' | 'specy' | 'drinks';
+export type TagType =
+  | "bakaleya"
+  | "conservy"
+  | "ovoshi"
+  | "myaso"
+  | "molochnoe"
+  | "frukty"
+  | "specy"
+  | "drinks";
 
 export interface DemoRecipeData {
   id: string;
@@ -36,12 +44,12 @@ export interface Recipe {
   description?: string;
   cookingTime?: number;
   servings?: number;
-  shoppingList: ShoppingItem[];
+  shoppingList: string[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type GroupByType = 'recipe' | 'tag' | 'none';
+export type GroupByType = "recipe" | "tag" | "none";
 
 export interface GroupedItems {
   [key: string]: ShoppingItem[];
