@@ -25,8 +25,8 @@ const convertToRecipe = (data: DemoRecipeData): Recipe => {
 };
 
 export class RecipeState {
-  recipes: Recipe[] = [];
-  selectedRecipe: Recipe | null = null;
+  items: Recipe[] = [];
+  selectedItem: Recipe | null = null;
   isLoading: boolean = false;
   error: string | null = null;
 
@@ -41,9 +41,9 @@ export class RecipeState {
       typeof window !== "undefined" ? localStorage.getItem("recipes") : null;
     if (stored) {
       try {
-        this.recipes = JSON.parse(stored);
-        if (!this.selectedRecipe && this.recipes.length > 0) {
-          this.selectedRecipe = this.recipes[0];
+        this.items = JSON.parse(stored);
+        if (!this.selectedItem && this.items.length > 0) {
+          this.selectedItem = this.items[0];
         }
       } catch (_) {}
     }
@@ -53,13 +53,13 @@ export class RecipeState {
   private saveToLocalStorage(): void {
     if (typeof window === "undefined") return;
     try {
-      localStorage.setItem("recipes", JSON.stringify(this.recipes));
+      localStorage.setItem("recipes", JSON.stringify(this.items));
       localStorage.setItem("recipes_last_saved", Date.now().toString());
     } catch (_) {}
   }
 
   get hasRecipes(): boolean {
-    return this.recipes.length > 0;
+    return this.items.length > 0;
   }
 
   loadRecipes = async (): Promise<void> => {
@@ -70,8 +70,8 @@ export class RecipeState {
     try {
       const demoRecipes = IMPORTED_DEMO_RECIPES_DATA.map(convertToRecipe);
       runInAction(() => {
-        this.recipes = demoRecipes;
-        this.selectedRecipe = demoRecipes[0];
+        this.items = demoRecipes;
+        this.selectedItem = demoRecipes[0];
         this.isLoading = false;
       });
       this.saveToLocalStorage();
@@ -84,7 +84,7 @@ export class RecipeState {
   };
 
   selectRecipe = (recipe: Recipe | null): void => {
-    this.selectedRecipe = recipe;
+    this.selectedItem = recipe;
   };
 
   createRecipe = (values: {
@@ -104,8 +104,8 @@ export class RecipeState {
       updatedAt: new Date(),
     };
     runInAction(() => {
-      this.recipes = [...this.recipes, newRecipe];
-      this.selectedRecipe = newRecipe;
+      this.items = [...this.items, newRecipe];
+      this.selectedItem = newRecipe;
     });
     this.saveToLocalStorage();
   };
@@ -120,15 +120,15 @@ export class RecipeState {
     },
   ): void => {
     runInAction(() => {
-      const index = this.recipes.findIndex((r) => r.id === recipeId);
+      const index = this.items.findIndex((r) => r.id === recipeId);
       if (index !== -1) {
-        this.recipes[index] = {
-          ...this.recipes[index],
+        this.items[index] = {
+          ...this.items[index],
           ...values,
           updatedAt: new Date(),
         };
-        if (this.selectedRecipe?.id === recipeId) {
-          this.selectedRecipe = { ...this.recipes[index] };
+        if (this.selectedItem?.id === recipeId) {
+          this.selectedItem = { ...this.items[index] };
         }
       }
     });
@@ -137,9 +137,9 @@ export class RecipeState {
 
   deleteRecipe = (recipeId: string): void => {
     runInAction(() => {
-      this.recipes = this.recipes.filter((r) => r.id !== recipeId);
-      if (this.selectedRecipe?.id === recipeId) {
-        this.selectedRecipe = this.recipes[0] || null;
+      this.items = this.items.filter((r) => r.id !== recipeId);
+      if (this.selectedItem?.id === recipeId) {
+        this.selectedItem = this.items[0] || null;
       }
     });
     this.saveToLocalStorage();
@@ -148,11 +148,11 @@ export class RecipeState {
   toggleShoppingItem = (recipeId: string, itemId: string): void => {
     runInAction(() => {
       shoppingItemState.toggleCompleted(itemId);
-      const recipe = this.recipes.find((r) => r.id === recipeId);
+      const recipe = this.items.find((r) => r.id === recipeId);
       if (recipe) {
         recipe.updatedAt = new Date();
-        if (this.selectedRecipe?.id === recipeId) {
-          this.selectedRecipe = { ...recipe };
+        if (this.selectedItem?.id === recipeId) {
+          this.selectedItem = { ...recipe };
         }
       }
     });
@@ -164,11 +164,11 @@ export class RecipeState {
   ): void => {
     runInAction(() => {
       shoppingItemState.addItem(recipeId, item);
-      const recipe = this.recipes.find((r) => r.id === recipeId);
+      const recipe = this.items.find((r) => r.id === recipeId);
       if (recipe) {
         recipe.updatedAt = new Date();
-        if (this.selectedRecipe?.id === recipeId) {
-          this.selectedRecipe = { ...recipe };
+        if (this.selectedItem?.id === recipeId) {
+          this.selectedItem = { ...recipe };
         }
       }
     });
@@ -181,11 +181,11 @@ export class RecipeState {
   ): void => {
     runInAction(() => {
       shoppingItemState.updateItem(itemId, values);
-      const recipe = this.recipes.find((r) => r.id === recipeId);
+      const recipe = this.items.find((r) => r.id === recipeId);
       if (recipe) {
         recipe.updatedAt = new Date();
-        if (this.selectedRecipe?.id === recipeId) {
-          this.selectedRecipe = { ...recipe };
+        if (this.selectedItem?.id === recipeId) {
+          this.selectedItem = { ...recipe };
         }
       }
     });
@@ -194,11 +194,11 @@ export class RecipeState {
   deleteShoppingItem = (recipeId: string, itemId: string): void => {
     runInAction(() => {
       shoppingItemState.deleteItem(itemId);
-      const recipe = this.recipes.find((r) => r.id === recipeId);
+      const recipe = this.items.find((r) => r.id === recipeId);
       if (recipe) {
         recipe.updatedAt = new Date();
-        if (this.selectedRecipe?.id === recipeId) {
-          this.selectedRecipe = { ...recipe };
+        if (this.selectedItem?.id === recipeId) {
+          this.selectedItem = { ...recipe };
         }
       }
     });
@@ -206,14 +206,14 @@ export class RecipeState {
 
   setRecipes(recipes: Recipe[]): void {
     runInAction(() => {
-      this.recipes = recipes;
+      this.items = recipes;
     });
     this.saveToLocalStorage();
   }
 
   setSelectedRecipe(recipe: Recipe | null): void {
     runInAction(() => {
-      this.selectedRecipe = recipe;
+      this.selectedItem = recipe;
     });
   }
 }

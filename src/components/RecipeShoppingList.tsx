@@ -8,7 +8,7 @@ import ShoppingList from "./ShoppingList";
 import RecipeItemModal from "./RecipeItemModal";
 
 const RecipeShoppingList: React.FC = observer(() => {
-  const { recipes } = recipeState;
+  const { items: recipes } = recipeState;
   const [groupBy, setGroupBy] = useState<GroupByType>("recipe");
   const [searchText, setSearchText] = useState("");
 

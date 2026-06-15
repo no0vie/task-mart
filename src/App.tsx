@@ -16,7 +16,7 @@ import RecipeSider from "./components/RecipeSider";
 const { Content, Header } = Layout;
 
 const AppInner: React.FC = () => {
-  const { recipes, selectedRecipe } = recipeState;
+  const { items: recipes, selectedItem: selectedRecipe } = recipeState;
   const [groupBy, setGroupBy] = useState<GroupByType>("recipe");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isItemModalVisible, setIsItemModalVisible] = useState(false);
@@ -34,7 +34,7 @@ const AppInner: React.FC = () => {
         await recipeState.loadRecipes();
       }
       // Load shopping items for all recipes
-      recipeState.recipes.forEach((r) => shoppingItemState.loadByRecipe(r.id));
+      recipeState.items.forEach((r) => shoppingItemState.loadByRecipe(r.id));
     };
     init();
   }, []);
