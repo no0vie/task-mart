@@ -34,7 +34,9 @@ const AppInner: React.FC = () => {
         await recipeState.loadRecipes();
       }
       // Load shopping items for all recipes
-      recipeState.items.forEach((r) => shoppingItemState.loadByRecipe(r.id));
+      recipeState.items.forEach((r) =>
+        shoppingItemState.loadByIds(r.shoppingList),
+      );
     };
     init();
   }, []);
@@ -92,7 +94,7 @@ const AppInner: React.FC = () => {
   // Переключение статуса выполнения
   const handleToggleItem = (itemId: string) => {
     if (!selectedRecipe) return;
-    recipeState.toggleShoppingItem(selectedRecipe.id, itemId);
+    shoppingItemState.toggleCompleted(itemId);
   };
 
   // Добавление/обновление пункта списка покупок
@@ -133,8 +135,11 @@ const AppInner: React.FC = () => {
   // Статистика
   const getRecipeStats = (recipe: Recipe) => {
     const total = recipe.shoppingList.length;
-    const completed = recipe.shoppingList.reduce(
-      (acc, id) => acc + (shoppingItemState.byId.get(id)?.completed ? 1 : 0),
+    const items = shoppingItemState.items.filter((shoppingItem) =>
+      recipe.shoppingList.includes(shoppingItem.id),
+    );
+    const completed = items.reduce(
+      (acc, item) => acc + (item.completed ? 1 : 0),
       0,
     );
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;

@@ -23,7 +23,11 @@ const RecipeShoppingList: React.FC = observer(() => {
 
   // Prepare aggregated data when in 'none' group
   const mergedItems: ShoppingItem[] = recipes
-    .flatMap((r) => r.shoppingList.map((id) => shoppingItemState.byId.get(id)))
+    .flatMap((r) =>
+      r.shoppingList.map((id) =>
+        shoppingItemState.items.find((item) => item.id === id),
+      ),
+    )
     .filter((i): i is ShoppingItem => !!i);
   const virtualRecipe: Recipe = {
     id: "all",
@@ -37,20 +41,23 @@ const RecipeShoppingList: React.FC = observer(() => {
   };
 
   const openEdit = (item: ShoppingItem) => {
-    const rid = shoppingItemState.getRecipeForItem(item.id);
-    setEditingRecipeId(rid ?? null);
-    setEditingItem(item);
-    setIsItemModalVisible(true);
+    // const rid = shoppingItemState.getRecipeForItem(item.id);
+    // setEditingRecipeId(rid ?? null);
+    // setEditingItem(item);
+    // setIsItemModalVisible(true);
+    // todo
   };
 
   const handleDeleteAggregated = (id: string) => {
-    const rid = shoppingItemState.getRecipeForItem(id);
-    if (rid) recipeState.deleteShoppingItem(rid, id);
+    // const rid = shoppingItemState.getRecipeForItem(id);
+    // if (rid) recipeState.deleteShoppingItem(rid, id);
+    // todo
   };
 
   const handleToggleAggregated = (id: string) => {
-    const rid = shoppingItemState.getRecipeForItem(id);
-    if (rid) recipeState.toggleShoppingItem(rid, id);
+    // const rid = shoppingItemState.getRecipeForItem(id);
+    // if (rid) shoppingItemState.toggleCompleted(rid);
+    // todo
   };
 
   if (!recipes.length) return <div>Нет рецептов для отображения.</div>;
@@ -73,7 +80,7 @@ const RecipeShoppingList: React.FC = observer(() => {
             searchText={searchText}
             onEdit={openEdit}
             onDelete={(id: string) => recipeState.deleteShoppingItem(r.id, id)}
-            onToggle={(id: string) => recipeState.toggleShoppingItem(r.id, id)}
+            onToggle={(id: string) => shoppingItemState.toggleCompleted(id)}
           />
         ))
       ) : (

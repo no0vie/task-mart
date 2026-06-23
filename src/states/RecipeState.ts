@@ -10,15 +10,7 @@ const convertToRecipe = (data: DemoRecipeData): Recipe => {
     description: data.description,
     cookingTime: data.cookingTime,
     servings: data.servings,
-    shoppingList: data.shoppingList.map((item) => {
-      // add item to global state
-      shoppingItemState.addItem(data.id, {
-        name: item.name,
-        amount: item.amount,
-        tags: item.tags,
-      });
-      return item.id;
-    }),
+    shoppingList: data.shoppingList.map((item) => item.id),
     createdAt: new Date(),
     updatedAt: new Date(),
   } as Recipe;
@@ -145,27 +137,17 @@ export class RecipeState {
     this.saveToLocalStorage();
   };
 
-  toggleShoppingItem = (recipeId: string, itemId: string): void => {
-    runInAction(() => {
-      shoppingItemState.toggleCompleted(itemId);
-      const recipe = this.items.find((r) => r.id === recipeId);
-      if (recipe) {
-        recipe.updatedAt = new Date();
-        if (this.selectedItem?.id === recipeId) {
-          this.selectedItem = { ...recipe };
-        }
-      }
-    });
-  };
-
   addShoppingItem = (
     recipeId: string,
     item: { name: string; amount: string; tags: TagType[] },
   ): void => {
     runInAction(() => {
-      shoppingItemState.addItem(recipeId, item);
+      const newItem = shoppingItemState.addItem(item);
       const recipe = this.items.find((r) => r.id === recipeId);
+
       if (recipe) {
+        recipe.shoppingList = [...(recipe?.shoppingList || [])];
+        recipe.shoppingList.push(newItem.id);
         recipe.updatedAt = new Date();
         if (this.selectedItem?.id === recipeId) {
           this.selectedItem = { ...recipe };

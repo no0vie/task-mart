@@ -112,11 +112,18 @@ const RecipeSider: React.FC<RecipeSiderProps> = ({
             <List.Item.Meta
               avatar={
                 <Badge
-                  count={recipe.shoppingList.reduce(
-                    (acc, id) =>
-                      acc + (shoppingItemState.byId.get(id)?.completed ? 1 : 0),
-                    0,
-                  )}
+                  count={(() => {
+                    const items = shoppingItemState.items.filter(
+                      (shoppingItem) =>
+                        recipe.shoppingList.includes(shoppingItem.id),
+                    );
+                    const completed = items.reduce(
+                      (acc, item) => acc + (item.completed ? 1 : 0),
+                      0,
+                    );
+
+                    return completed;
+                  })()}
                   style={{ backgroundColor: "#52c41a" }}
                 >
                   <BookOutlined style={{ fontSize: "20px" }} />

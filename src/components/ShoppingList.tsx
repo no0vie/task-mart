@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, Divider } from "antd";
 import type { Recipe, GroupByType, GroupedItems, ShoppingItem } from "../types";
-import { shoppingItemState } from "../states/ShoppingItemState";
 import ShoppingListItem from "./ShoppingListItem";
 import { AVAILABLE_TAGS } from "../constants/ui";
 
@@ -21,15 +20,8 @@ const getGroupedItems = (
 ): GroupedItems => {
   if (!selectedRecipe) return {};
 
-  const isVirtual = selectedRecipe.id === "all";
-
-  let items: ShoppingItem[] = [];
-  if (isVirtual) {
-    // virtual recipe already contains full objects
-    items = selectedRecipe.shoppingList as unknown as ShoppingItem[];
-  } else {
-    items = shoppingItemState.getByRecipe(selectedRecipe.id);
-  }
+  let items: ShoppingItem[] =
+    selectedRecipe.shoppingList as unknown as ShoppingItem[];
 
   const filtered = items.filter((i) =>
     i.name.toLowerCase().includes(searchText.toLowerCase()),
