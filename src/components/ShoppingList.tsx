@@ -93,6 +93,7 @@ const ShoppingList: React.FC<ShoppingListProps> = ({
                 <ShoppingListItem
                   key={item.id}
                   item={item}
+                  showTag={true}
                   onEdit={onEdit}
                   onDelete={onDelete}
                   onToggle={onToggle}
@@ -105,6 +106,7 @@ const ShoppingList: React.FC<ShoppingListProps> = ({
                     <ShoppingListItem
                       key={item.id}
                       item={item}
+                      showTag={true}
                       onEdit={onEdit}
                       onDelete={onDelete}
                       onToggle={onToggle}
