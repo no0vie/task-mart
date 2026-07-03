@@ -109,6 +109,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
       </Card>
 
       <ShoppingListHeader
+        hideNoneGroup
         searchText={searchText}
         setSearchText={setSearchText}
         groupBy={groupBy}

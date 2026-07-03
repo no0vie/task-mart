@@ -10,6 +10,7 @@ export interface ShoppingListHeaderProps {
   groupBy: GroupByType;
   setGroupBy: (value: GroupByType) => void;
   onAdd: () => void;
+  hideNoneGroup?: boolean; // default false
 }
 
 const ShoppingListHeader: React.FC<ShoppingListHeaderProps> = ({
@@ -18,6 +19,7 @@ const ShoppingListHeader: React.FC<ShoppingListHeaderProps> = ({
   groupBy,
   setGroupBy,
   onAdd,
+  hideNoneGroup = false,
 }) => (
   <Card style={{ marginBottom: "24px" }}>
     <Space size="large">
@@ -32,7 +34,11 @@ const ShoppingListHeader: React.FC<ShoppingListHeaderProps> = ({
       <Segmented
         value={groupBy}
         onChange={(value) => setGroupBy(value as GroupByType)}
-        options={GROUP_BY_OPTIONS}
+        options={
+          hideNoneGroup
+            ? GROUP_BY_OPTIONS.filter((o) => o.value !== "none")
+            : GROUP_BY_OPTIONS
+        }
       />
       <Button type="primary" icon={<PlusOutlined />} onClick={onAdd}>
         Добавить покупку
