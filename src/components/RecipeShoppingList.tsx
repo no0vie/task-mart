@@ -57,7 +57,7 @@ const RecipeShoppingList: React.FC = observer(() => {
   if (!recipes.length) return <div>Нет рецептов для отображения.</div>;
 
   return (
-    <div style={{ padding: "16px" }}>
+    <>
       <ShoppingListHeader
         searchText={searchText}
         setSearchText={setSearchText}
@@ -128,7 +128,7 @@ const RecipeShoppingList: React.FC = observer(() => {
           editingItem={editingItem}
         />
       )}
-    </div>
+    </>
   );
 });
 
