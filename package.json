@@ -1,17 +1,8 @@
 {
-  "name": "task-mart",
+  "name": "pantry",
   "version": "1.0.0",
-  "description": "",
-  "homepage": "https://github.com/no0vie/task-mart#readme",
-  "bugs": {
-    "url": "https://github.com/no0vie/task-mart/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/no0vie/task-mart.git"
-  },
-  "license": "ISC",
-  "author": "",
+  "license": "MIT",
+  "author": "Eugene Novikov",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
