@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input, InputNumber, Button, Space } from "antd";
 import type { Recipe } from "../types";
+import { RECIPE_MODAL } from "../constants/testIds";
 
 interface RecipeModalProps {
   visible: boolean;
@@ -30,7 +31,12 @@ const RecipeModal: React.FC<RecipeModalProps> = ({
 
   return (
     <Modal title={title} open={visible} onCancel={onClose} footer={null}>
-      <Form form={form} layout="vertical" onFinish={onSubmit}>
+      <Form
+        id={RECIPE_MODAL.FORM}
+        form={form}
+        layout="vertical"
+        onFinish={onSubmit}
+      >
         <Form.Item
           name="title"
           label="Название рецепта"

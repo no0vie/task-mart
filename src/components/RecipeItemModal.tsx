@@ -9,6 +9,7 @@ import {
   InputNumber,
   Select,
 } from "antd";
+import { RECIPE_ITEM_MODAL } from "../constants/testIds";
 import { AVAILABLE_TAGS, TAG_ICON_MAP } from "../constants/ui";
 import { POPULAR_QUANTITY_VARIANTS } from "../constants/quantityOptions";
 import type { ShoppingItem, TagType, Recipe } from "../types";
@@ -93,6 +94,7 @@ const RecipeItemModal: React.FC<RecipeItemModalProps> = ({
   return (
     <Modal title={title} open={visible} onCancel={onClose} footer={null}>
       <Form<ShoppingItem>
+        id={RECIPE_ITEM_MODAL.FORM}
         form={form}
         layout="vertical"
         onValuesChange={onValuesChange}
@@ -104,6 +106,7 @@ const RecipeItemModal: React.FC<RecipeItemModalProps> = ({
           rules={[{ required: true, message: "Введите название" }]}
         >
           <AutoComplete
+            id={RECIPE_ITEM_MODAL.NAME_INPUT}
             placeholder="Например: Картофель"
             options={nameOptions}
           />
@@ -127,9 +130,10 @@ const RecipeItemModal: React.FC<RecipeItemModalProps> = ({
             name="quantity"
             label="Условная единица"
             rules={[{ required: true, message: "Укажите условную единицу" }]}
-            style={{ flexBasis: '66%', flexGrow: 1 }}
+            style={{ flexBasis: "66%", flexGrow: 1 }}
           >
             <AutoComplete
+              id={RECIPE_ITEM_MODAL.QUANTITY_INPUT}
               placeholder="Например: шт или г"
               options={quantityList}
               disabled={!isQuantityChangeAvailable}
@@ -166,7 +170,11 @@ const RecipeItemModal: React.FC<RecipeItemModalProps> = ({
           </Select>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button
+            id={RECIPE_ITEM_MODAL.SUBMIT_BUTTON}
+            type="primary"
+            htmlType="submit"
+          >
             {submitText}
           </Button>
         </Form.Item>

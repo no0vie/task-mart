@@ -18,6 +18,7 @@ import {
 import type { FormInstance } from "antd";
 import type { Recipe } from "../types";
 import { shoppingItemState } from "../states/ShoppingItemState";
+import { RECIPE_SIDER } from "../constants/testIds";
 
 interface RecipeSiderProps {
   recipes: Recipe[];
@@ -67,6 +68,7 @@ const RecipeSider: React.FC<RecipeSiderProps> = ({
         dataSource={recipes}
         renderItem={(recipe) => (
           <List.Item
+            id={RECIPE_SIDER.RECIPE_LIST_ITEM_PREFIX + recipe.title}
             style={{
               padding: "12px 16px",
               cursor: "pointer",
